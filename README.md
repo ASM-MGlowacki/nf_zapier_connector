@@ -104,7 +104,7 @@ add_filter('ag_nf_excluded_form_ids', function(array $ids) {
 
 ## Licencja
 
-GPL-2.0+. Szczegóły w nagłówku pliku `nf-zapier-connector.php`.
+GPL-2.0+. Szczegóły w nagłówku pliku `nf-zapier-connector.php`..
 
 ---
 
