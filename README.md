@@ -39,6 +39,31 @@ Wtyczka słucha zdarzenia `ninja_forms_submit_data`, mapuje pola według intelig
 - Wysyłka jest nieblokująca (`blocking => false`).
 - Bezpieczeństwo: sprawdzany jest host webhooka (musi być zgodny z `AG_ZAPIER_HOST`).
 
+## Wyznaczanie wartości „Calculated Source”
+
+Wartość `Calculated Source` jest wyliczana na podstawie `pys_utm_medium`, `pys_utm_source` oraz `pys_traffic_source`:
+
+- **Kampanie płatne (CPC)**: gdy `utm_medium = cpc`
+  - `utm_source = google` → `google cpc`
+  - `utm_source = facebook` → `facebook cpc`
+  - inne źródła → `inne cpc`
+
+- **Newsletter (rozgałęzienie po medium)**: gdy `utm_source = newsletter`
+  - `utm_medium = email` → `newsletter`
+  - `utm_medium = sms` → `Kampania SMS`
+  - inne/ brak → `Newsletter Inne`
+
+- **Ruch organiczny (bez jawnego medium)**: gdy `pys_utm_medium` jest puste lub `'null'`
+  - `traffic_source = direct` → `direct`
+  - `traffic_source` zawiera `instagram` → `instagram organic`
+  - `traffic_source` zawiera `facebook`, `linkedin` lub `messenger` → `facebook organic`
+  - `traffic_source` zawiera `google`, `bing`, `chat`, `yahoo`, `perplexity` → `organic`
+  - w pozostałych przypadkach → `referral`
+
+- **Fallback**: jeśli żaden z powyższych warunków nie pasuje → `inne`.
+
+Uwaga: `pys_traffic_source` jest traktowane jako znormalizowane (małe litery), dzięki czemu dopasowania `str_contains` działają przewidywalnie.
+
 ## Zapier – szybki start
 
 1. W Zapier utwórz Zapa: `Webhooks by Zapier -> Catch Hook`.
