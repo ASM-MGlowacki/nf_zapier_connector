@@ -381,8 +381,12 @@ function ag_nf_calculate_source(array $d): string
         };
     }
 
-    if ('newsletter' === $utmSource && 'direct' === $trafficSource) {
-        return 'email';
+    if ('newsletter' === $utmSource) {
+        return match ($utmMedium) {
+            'email' => 'newsletter',
+            'sms'   => 'Kampania SMS',
+            default => 'Newsletter Inne',
+        };
     }
 
     if (empty($utmMedium) || 'null' === $utmMedium) {
@@ -390,12 +394,15 @@ function ag_nf_calculate_source(array $d): string
             return 'direct';
         }
 
+        if (null !== $trafficSource && str_contains($trafficSource, 'instagram')) {
+            return 'instagram organic';
+        }
+
         if (
             null !== $trafficSource &&
             (str_contains($trafficSource, 'facebook') ||
              str_contains($trafficSource, 'linkedin') ||
-             str_contains($trafficSource, 'messenger') ||
-             str_contains($trafficSource, 'instagram'))
+             str_contains($trafficSource, 'messenger'))
         ) {
             return 'facebook organic';
         }
